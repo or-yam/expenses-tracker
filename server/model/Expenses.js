@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/peopleDB', { useNewUrlParser: true });
-const Schema = mongoose.Schema;
 
+mongoose.connect('mongodb://localhost/Expenses', { useNewUrlParser: true });
+
+const Schema = mongoose.Schema;
 
 const expensesSchema = 
     new Schema({
   item: String,
   amount: Number,
-  date: Date,
+  date: String,
   group: String,
 });
 

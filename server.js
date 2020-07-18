@@ -13,14 +13,16 @@ app.use('/', api);
 mongoose.connect('mongodb://localhost/Expenses', { useNewUrlParser: true });
 
 //****    To Put some dummy data    ****//
-/*
+
 const Expenses = require('./server/model/Expenses')
 const dummyExpenses = require('./expenses.json')
 for (const dummy of dummyExpenses) {
     let a = new Expenses(dummy)
     a.save()
 }
-*/
+
+//*/////////////////////////////////////*//
+
 app.listen(port, function () {
   console.log(`Running on port ${port}`);
 });
