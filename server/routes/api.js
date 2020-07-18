@@ -1,11 +1,11 @@
 const express = require('express');
 const moment = require('moment');
 const Expense = require('../model/Expenses');
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 
 const router = express.Router();
 
-mongoose.connect('mongodb://localhost/Expenses', { useNewUrlParser: true });
+// mongoose.connect('mongodb://localhost/Expenses', { useNewUrlParser: true });
 
 const dateValidator = (req, res, next) => {
   let date = req.body.date;
@@ -17,19 +17,16 @@ const dateValidator = (req, res, next) => {
 
 //get expenses by date or all sorted
 router.get('/expenses/:d1?/:d2?', function (req, res) {
-  const d1 = moment(new Date(req.params.d1)).format('LLLL');
-  const d2 = moment(new Date(req.params.d2)).format('LLLL');
-  if (d1 && d2) {
-    ///not Working
-    Expense.find({ date: { $gte: d1, $lte: d2 } }).exec(function (err, data) {
-      res.send(data);
-    });
-  } else if (d1 && !d2) {
-    const today = moment(new Date()).format('LLLL');
-    Expense.find({
-      // not Working
-      date: { $gte: today, $lte: d1 },
-    }).exec(function (err, data) {
+  //d1 is the latest
+  let d1 = req.params.d1;
+  let d2 = req.params.d2;
+  if (d1) {
+    d1 = moment(d1).format('LLLL');
+    d2 = moment(d2).format('LLLL');
+    Expense.find({ 'date.$date': { $lte: d1, $gte: d2 } }).exec(function (
+      err,
+      data
+    ) {
       res.send(data);
     });
   } else {
@@ -60,6 +57,7 @@ router.post('/new', dateValidator, function (req, res) {
 router.put('/update/:g1/:g2', function (req, res) {
   const group1 = req.params.g1;
   const group2 = req.params.g2;
+
   Expense.findOneAndUpdate({ group: group1 }, { group: group2 }).exec(function (
     err,
     data
@@ -70,6 +68,7 @@ router.put('/update/:g1/:g2', function (req, res) {
 
 //get expenses by group and sum
 router.get('/expenses/:group/', function (req, res) {
+  //change rout path
   if (req.query.total) {
     Expense.aggregate(
       [
@@ -87,18 +86,17 @@ router.get('/expenses/:group/', function (req, res) {
     );
   } else {
     Expense.find({ group: req.params.group }).exec(function (err, data) {
+      console.log(data);
       res.send(data);
     });
   }
 });
 
 //delete all from collection
-/*
-router.delete('/all',function(req,res){
-  Expense.remove({},function(err,data){
-    res.end()
-  })
-})
-*/
+router.delete('/all', function (req, res) {
+  Expense.remove({}, function (err, data) {
+    res.end();
+  });
+});
 
 module.exports = router;
