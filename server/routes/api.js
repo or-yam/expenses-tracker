@@ -7,9 +7,10 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/Expenses', { useNewUrlParser: true });
 
 const dateValidator = (req, res, next) => {
-  req.body.date
-    ? (req.body.date = moment(req.body.date).format('LLLL'))
-    : (req.body.date = moment(new Date()).format('LLLL'));
+  const date = req.body.date;
+  date
+    ? (date = moment(date).format('LLLL'))
+    : (date = moment(new Date()).format('LLLL'));
   next();
 };
 
@@ -49,10 +50,18 @@ router.put('/update/:g1/:g2', function (req, res) {
 router.get('/expenses/:group/', function (req, res) {
   if (req.query.total) {
     Expense.aggregate(
-      { $match: { group: req.body.group } },
-      { $sum: '$amount' }.exec(function (err, data) {
-        res.send(data);///Not Working
-      })
+      [
+        { $match: { group: req.params.group } },
+        {
+          $group: {
+            _id: '$group',
+            total: { $sum: '$amount' },
+          },
+        },
+      ],
+      function (err, data) {
+        res.send(data);
+      }
     );
   } else {
     Expense.find({ group: req.params.group }).exec(function (err, data) {
@@ -60,5 +69,8 @@ router.get('/expenses/:group/', function (req, res) {
     });
   }
 });
+
+
+
 
 module.exports = router;
