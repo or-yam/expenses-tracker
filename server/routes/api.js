@@ -17,16 +17,13 @@ const dateValidator = (req, res, next) => {
 
 //get expenses by date or all sorted
 router.get('/expenses/:d1?/:d2?', function (req, res) {
-  //d1 is the latest
+  //d1 is the early
   let d1 = req.params.d1;
   let d2 = req.params.d2;
   if (d1) {
     d1 = moment(d1).format('LLLL');
     d2 = moment(d2).format('LLLL');
-    Expense.find({ 'date.$date': { $lte: d1, $gte: d2 } }).exec(function (
-      err,
-      data
-    ) {
+    Expense.find({ date: { $gte: d1, $lte: d2 } }).exec(function (err, data) {
       res.send(data);
     });
   } else {
@@ -67,8 +64,7 @@ router.put('/update/:g1/:g2', function (req, res) {
 });
 
 //get expenses by group and sum
-router.get('/expenses/:group/', function (req, res) {
-  //change rout path
+router.get('/expenses/groups/:group/', function (req, res) {
   if (req.query.total) {
     Expense.aggregate(
       [
