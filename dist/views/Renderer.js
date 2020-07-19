@@ -1,12 +1,5 @@
-class RenderExpenses {
-    constructor(){
+class Renderer {
+  renderExpenses = (expensesData) => {};
 
-    }
-}
-
-
-class RenderAdd {
-    constructor(){
-        
-    }
+  renderAdd = (expense) => {};
 }

@@ -1,28 +1,26 @@
 const express = require('express');
 const moment = require('moment');
 const Expense = require('../model/Expenses');
-// const mongoose = require('mongoose');
 
 const router = express.Router();
 
-// mongoose.connect('mongodb://localhost/Expenses', { useNewUrlParser: true });
-
 const dateValidator = (req, res, next) => {
-  let date = req.body.date;
+  let { date } = req.body;
+  let { d1, d2 } = req.params;
   date
     ? (req.body.date = moment(date).format('LLLL'))
     : (req.body.date = moment().format('LLLL'));
+  if (d1) {
+    req.params.d1 = moment(d1).format('LLLL');
+    req.params.d2 = moment(d2).format('LLLL');
+  }
   next();
 };
 
 //get expenses by date or all sorted
-router.get('/expenses/:d1?/:d2?', function (req, res) {
-  //d1 is the early
-  let d1 = req.params.d1;
-  let d2 = req.params.d2;
+router.get('/expenses/:d1?/:d2?', dateValidator, function (req, res) {
+  const { d1, d2 } = req.params;
   if (d1) {
-    d1 = moment(d1).format('LLLL');
-    d2 = moment(d2).format('LLLL');
     Expense.find({ date: { $gte: d1, $lte: d2 } }).exec(function (err, data) {
       res.send(data);
     });
@@ -37,29 +35,24 @@ router.get('/expenses/:d1?/:d2?', function (req, res) {
 
 //post new expense
 router.post('/new', dateValidator, function (req, res) {
+  const { item, amount, group, date } = req.body;
   const exp = new Expense({
-    item: req.body.item, /// check for destructuring
-    amount: req.body.amount,
-    group: req.body.group,
-    date: req.body.date,
+    item,
+    amount,
+    group,
+    date,
   });
-  exp.save();
-  const id = exp._id;
-  Expense.findById(id, function (err, data) {
-    res.send(data); /// not working async problem
-  });
+  exp.save().then((e) => res.send(e));
 });
 
 //change group of expense
 router.put('/update/:g1/:g2', function (req, res) {
-  const group1 = req.params.g1;
-  const group2 = req.params.g2;
-
-  Expense.findOneAndUpdate({ group: group1 }, { group: group2 }).exec(function (
+  const { g1, g2 } = req.params;
+  Expense.findOneAndUpdate({ group: g1 }, { group: g2 }).exec(function (
     err,
     data
   ) {
-    res.send(`Item ${data.item} changed Group, from ${group1} to ${group2}`);
+    res.send(`Item ${data.item} changed Group, from ${g1} to ${g2}`);
   });
 });
 

@@ -1,12 +1,19 @@
 class ExpenseManager {
-    _data = {
-        expenses : []
-    }
-    addExpense(){
+  constructor() {
+    this._data = {
+      expenses: [],
+    };
+  }
 
-    }
+  addExpense = (expense) => {
+    $.post(`/new`, expense, (res) => {
+      this._data.expenses.push(res);
+    });
+  };
 
-    getExpenses(){
-
-    }
+  getExpenses = (expense) => {
+    $.get(`/expenses`, (res) => {
+      this._data.expenses = res;
+    });
+  };
 }
