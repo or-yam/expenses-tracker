@@ -75,7 +75,6 @@ router.get('/expenses/groups/:group/', function (req, res) {
     );
   } else {
     Expense.find({ group: req.params.group }).exec(function (err, data) {
-      console.log(data);
       res.send(data);
     });
   }
