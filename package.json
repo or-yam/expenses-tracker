@@ -5,13 +5,15 @@
   "main": "Expenses.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "review": "node node_modules/elevation-pr/index.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
     "chart.js": "^2.9.3",
+    "elevation-pr": "^1.3.0",
     "express": "^4.17.1",
     "handlebars": "^4.7.6",
     "jquery": "^3.5.1",
