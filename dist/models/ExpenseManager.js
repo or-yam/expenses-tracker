@@ -6,7 +6,7 @@ class ExpenseManager {
   }
 
   addExpense = async (expense) => {
-    let data = await $.post('/new', expense);
+    let data = await $.post('/expenses', expense);
     this._data.expenses.push(data);
   };
 

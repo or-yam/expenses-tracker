@@ -34,7 +34,7 @@ router.get('/expenses/:d1?/:d2?', dateValidator, function (req, res) {
 });
 
 //post new expense
-router.post('/new', dateValidator, function (req, res) {
+router.post('/expenses', dateValidator, function (req, res) {
   const { item, amount, group, date } = req.body;
   const exp = new Expense({
     item,
@@ -46,7 +46,7 @@ router.post('/new', dateValidator, function (req, res) {
 });
 
 //change group of expense
-router.put('/update/:g1/:g2', function (req, res) {
+router.put('/expenses/:g1/:g2', function (req, res) {
   const { g1, g2 } = req.params;
   Expense.findOneAndUpdate({ group: g1 }, { group: g2 }).exec(function (
     err,
@@ -81,7 +81,7 @@ router.get('/expenses/groups/:group/', function (req, res) {
 });
 
 //delete all from collection
-router.delete('/all', function (req, res) {
+router.delete('/expenses', function (req, res) {
   Expense.remove({}, function (err, data) {
     res.end();
   });
