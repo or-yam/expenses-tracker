@@ -5,15 +5,13 @@ class ExpenseManager {
     };
   }
 
-  addExpense = (expense) => {
-    $.post(`/new`, expense, (res) => {
-      this._data.expenses.push(res);
-    });
+  addExpense = async (expense) => {
+    let data = await $.post('/new', expense);
+    this._data.expenses.push(data);
   };
 
-  getExpenses = (expense) => {
-    $.get(`/expenses`, (res) => {
-      this._data.expenses = res;
-    });
+  getExpenses = async () => {
+    let data = await $.get(`/expenses`);
+    this._data.expenses = data;
   };
 }

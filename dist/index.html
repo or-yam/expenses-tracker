@@ -10,8 +10,23 @@
   </head>
 
   <body>
-    <nav></nav>
+    <nav id="navbar">
+      <button id="new-exp-btn">new</button>
+      <button id="refresh">refresh</button>
+    </nav>
+    <h1>Expenses</h1>
+    <div id="dashboard">
+      <canvas id="myChart" width="400" height="400"></canvas>
 
+    </div>
+
+    <script id="Expenses-template" type="text/x-handlebars-template">
+      
+    </script>
+
+
+    <script src="models/ExpenseManager.js"></script>
+    <script src="views/Renderer.js"></script>
     <script src="main.js"></script>
   </body>
 </html>
